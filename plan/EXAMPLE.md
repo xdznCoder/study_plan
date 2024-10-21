@@ -10,7 +10,7 @@
 
 ### 计划介绍
 - **目标**: 做1000道LeetCode真题
-- **方式**: [LeetCode](https://leetcode.com)刷题
+- **方式**: [LeetCode](https://leetcode.cn)刷题
 - **截至时间**: 2024-10-27
 - **进度**: ???%
 
