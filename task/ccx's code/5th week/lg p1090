@@ -1,0 +1,132 @@
+## 题目描述：
+题目描述
+    单词接龙是一个与我们经常玩的成语接龙相类似的游戏，现在我们已知一组单词，
+    且给定一个开头的字母，要求出以这个字母开头的最长的“龙”（每个单词都最多在“龙”中出现两次），
+    在两个单词相连时，其重合部分合为一部分，例如 beast 和 astonish，如果接成一条龙则变为 beastonish，
+    另外相邻的两部分不能存在包含关系，例如 at 和 atide 间不能相连。
+
+输入格式
+    输入的第一行为一个单独的整数 n
+    n 表示单词数，以下 n行每行有一个单词，
+    输入的最后一行为一个单个字符，表示“龙”开头的字母。
+    你可以假定以此字母开头的“龙”一定存在。
+
+输出格式
+    只需输出以此字母开头的最长的“龙”的长度。
+
+## 题目链接
+    https://www.luogu.com.cn/problem/P1019
+
+## 思路
+    1.要接龙首先得判断能不能接龙
+        首先进行遍历，求出字符串i和j之间的拼接长度，以arr[i][j]存储
+        注意：因为题目要求最长，所以我们应该取最短拼接长度
+    2.然后便可以开始暴力搜索
+        利用arr数组开始搜索，以st作为判断使用次数
+        当没有单词可以接龙时退出，取之中的最大值
+## code
+    #include <stdio.h>
+    #include <string.h>
+    #include <stdlib.h>
+    int len1,len2;
+    char c[20][100];
+    //arr[i][j]表示字符串i后接字符串j有多少重叠部分
+    int arr[20][20];
+    //st判断接龙多少次
+    int *st;
+    int max=-1;
+    int n;
+    //最大值
+    int fmax(int a,int b){
+        if(a>b)return a;
+        else return b;
+    }
+    //暴力枚举
+    void dfs(int start,int cnt){
+        //start接龙过一次
+        st[start]--;
+        //cnt+=strlen(c[start]);
+        for(int i=0;i<n;i++){
+            //如果有重叠部分 且 次数未用完 且 不完全重叠（eg）cheat 接龙 at 后无变化
+            //就向下接龙
+            if(arr[start][i]>0 && st[i]>0 && strlen(c[i])-arr[start][i]>0){
+                dfs(i,cnt+strlen(c[i])-arr[start][i]);
+            }
+        }
+        //无法再接龙，结束找最大值
+        max=fmax(max,cnt);
+        //回溯
+        st[start]++;
+    }
+    //判断字符串i从第j位开始接龙字符串k能否成立
+    int isd(int i,int k,int j){
+        for(int l=j,f=0;l<len1;l++,f++){
+            if(f>=len2)return 0;
+            if(c[i][l]!=c[k][f])return 0;
+        }
+        return 1;
+    }
+    //找重叠部分的值
+    //注意贪心原则，应该取最小重叠部分
+    int cntC(int i,int k){
+        int j=0;
+
+        for(j=len1-1;j>=0;j--){
+            if(c[i][j]==c[k][0]){
+                if(isd(i,k,j))break;
+            }
+        }
+        //如果无重叠部分j=-1，返回0
+        if(j<0)return 0;
+        return len1-j;
+    }
+    //将st（用于判断）全部赋值为2
+    //arr赋值为0
+    void set(){
+        for(int i=0;i<20;i++){
+            st[i]=2;
+        }
+        for(int i=0;i<20;i++){
+            for(int j=0;j<20;j++)arr[i][j]=0;
+        }
+    }
+    int main(){
+        //start用于记录接龙头的字符串
+        int start[20],f=0;
+        //创建st（用于判断）
+        int *tem=(int*)malloc(20*sizeof(int));
+        st=tem;
+        //初始化st，arr
+        set();
+        //1.输入字符串
+        scanf("%d",&n);
+        for(int i=0;i<n;i++){
+            scanf("%s",c[i]);
+        }
+        //输入字符串的头
+        char t;
+        while(t!='\n'){
+            scanf("%c",&t);
+        }
+        scanf("%c",&t);
+        //开始遍历，创建arr
+        for(int i=0;i<n;i++){
+            if(c[i][0]==t)start[f++]=i;
+            for(int k=0;k<n;k++){
+                //由于之前的贪心原则，相同字符串也可接龙如atat，->atatat
+                len1=strlen(c[i]);
+                len2=strlen(c[k]);
+                arr[i][k]=cntC(i,k);
+            }
+        }
+        //从（每个）开头开始接龙
+        for(int i=0;i<f;i++){
+            dfs(i,strlen(c[start[i]]));
+        }
+        //输出
+        printf("%d",max);
+        return 0;
+    }
+## 题后反思
+    1.注意贪心原则，取最短的拼接长度，具体方法为从后向前判断
+    2.由于1，自身与自身也可拼接
