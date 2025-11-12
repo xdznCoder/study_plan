@@ -25,6 +25,6 @@
 - **状态**: 进行中
 - **检查方式**: 会上现场展示与提问
 - **要求**: 使用C/C++语言，要求实现包括但不限于下列所示功能，要求数据持久化及可视化（excel表格或txt），数据结构要求使用链表，下面是详细要求：
-- <br>
-  <img src="D:\Git\github\task-last\img.png" alt="img" width="500"/>
+- [![pZCdQC6.png](https://s21.ax1x.com/2025/11/12/pZCdQC6.png)](https://imgchr.com/i/pZCdQC6)
 - **备注**: 对于多文件项目，最好使用正式的IDE(vscode,Clion,IDEA等)，可以去学习一下c/c++的头文件相关知识和文件操作
+
